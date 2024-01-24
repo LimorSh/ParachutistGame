@@ -2,6 +2,7 @@ import Airplane from './objects/Airplane';
 import Boat from './objects/Boat';
 import Parachutist from './objects/Parachutist';
 
+
 const canvas: HTMLCanvasElement | null = document.getElementById('gameCanvas') as HTMLCanvasElement;
 const ctx: CanvasRenderingContext2D | null = canvas?.getContext('2d');
 
@@ -9,12 +10,23 @@ if (!canvas || !ctx) {
     throw new Error("Canvas not supported");
 }
 
-let boat = new Boat(canvas);
+const backgroundImage = new Image();
+backgroundImage.src = './resources/images/background.png';
+const seaImage = new Image();
+seaImage.src = './resources/images/sea.png';
+const seaImageHeight = canvas.height * 0.2;
+const seaImageWidth = canvas.width;
+const seaImageX = 0;
+const seaImageY = canvas.height - seaImageHeight;
+const boatY = seaImageY + (0.5 * seaImageHeight)
+
+
+let boat = new Boat(canvas, boatY);
 let parachutists: Parachutist[] = [];
 let airplane = new Airplane(canvas);
 let score = 0;
 let lives = 3;
-const spawnInterval = 20000; // Set the interval between parachutist spawns in milliseconds
+const spawnInterval = 5000; // Set the interval between parachutist spawns in milliseconds
 let lastSpawnTime = 0;
 
 function updateGame() {
@@ -26,6 +38,8 @@ function updateGame() {
 
     // Clear the canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(seaImage, seaImageX, seaImageY, seaImageWidth, seaImageHeight);
 
     // Draw airplane
     if (airplane && airplane.x !== undefined && airplane.y !== undefined && airplane.width && airplane.height) {
@@ -86,19 +100,21 @@ function updateGame() {
 
     // Check game over condition
     if (lives <= 0) {
+        //todo: draw live: 0
+        // ctx.fillStyle = 'black';
+        // ctx.font = '20px Arial';
+        // ctx.fillText('Lives: ' + lives, canvas.width - 100, 30);
+
         alert("Game Over! Your score: " + score);
         resetGame();
         return; // Stop the game loop
     }
-
-    // Continue the game loop
-    requestAnimationFrame(updateGame);
 }
 
 function resetGame() {
     score = 0;
     lives = 3;
-    boat = new Boat(canvas);
+    boat = new Boat(canvas, boatY);
     parachutists = [];
 }
 
@@ -122,6 +138,7 @@ canvas.addEventListener('mousemove', (e) => {
 
 function gameLoop() {
     updateGame();
+    requestAnimationFrame(gameLoop);
 }
 
 window.onload = () => {

@@ -2,25 +2,27 @@ import Parachutist from './Parachutist';
 
 // Represents the player-controlled boat that is trying to catch the falling objects
 export default class Boat {
+    private readonly imageSrc = './resources/images/boat.png';
+    private readonly image: HTMLImageElement;
     public x: number;
     readonly y: number;
     readonly width: number;
     readonly height: number;
-    readonly color: string;
     readonly speed: number;
 
-    constructor(canvas: HTMLCanvasElement | null) {
-        this.width = 50;
-        this.height = 30;
+    constructor(canvas: HTMLCanvasElement | null, yBottom: number) {
+        this.image = new Image();
+        this.image.src = this.imageSrc;
+
+        this.width = 80;
+        this.height = 60;
         this.x = (canvas?.width ?? 0) / 2 - this.width / 2; // Initial x position
-        this.y = (canvas?.height ?? 0) - this.height; // Start at the bottom
-        this.color = "blue"
+        this.y = yBottom - this.height;
         this.speed = 10;
     }
 
     draw(ctx: CanvasRenderingContext2D): void {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
     moveLeft() {
@@ -43,7 +45,7 @@ export default class Boat {
         return (
             parachutist.x >= this.x &&
             parachutist.x <= this.x + this.width &&
-            parachutist.y + 20 >= this.y // Adjust for catching range
+            parachutist.y >= this.y - (this.height * 0.5) // Adjust for catching range
         );
     }
 }
