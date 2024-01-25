@@ -8,15 +8,12 @@ export default class GameLogic {
     private readonly CATCH_POINTS = 10;
     private readonly TOTAL_LIVES = 3;
     // private imageManager: ImageManager;
-    private readonly dropInterval = 5000; // Set the interval between parachutist dropping in milliseconds
-    private lastDropTime = 0;
     private readonly _airplane: Airplane;
     private _boat!: Boat;
     private _score!: number;
     private _lives!: number;
 
 
-    // constructor(canvas: HTMLCanvasElement, imageManager: ImageManager, boatYBottom: number) {
     constructor(canvasMiddleWidth: number, boatY: number) {
         // this.imageManager = imageManager;
 
@@ -60,10 +57,8 @@ export default class GameLogic {
 
         const currentTime = Date.now();
 
-        // Call the method to drop parachutists from time to time
-        if (currentTime - this.lastDropTime > this.dropInterval) {
-            this._airplane.dropParachutist();
-            this.lastDropTime = currentTime;
+        if (this._airplane.shouldDropParachutist(currentTime)) {
+            this._airplane.dropParachutist(currentTime);
         }
     }
 

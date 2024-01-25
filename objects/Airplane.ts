@@ -3,7 +3,8 @@ import GameElement from "./GameElement";
 
 // Represents the flying object that is dropping the falling objects
 export default class Airplane implements GameElement {
-    private readonly imageSrc = './resources/images/plane.png';
+    private readonly DROP_INTERVAL = 5000;
+    private readonly IMAGE_SRC = './resources/images/plane.png';
     private readonly image: HTMLImageElement;
     x: number;
     y: number;
@@ -12,10 +13,11 @@ export default class Airplane implements GameElement {
     speed: number;
     direction: number;
     private _parachutists: Parachutist[];
+    private lastDropTime: number;
 
     constructor(x: number) {
         this.image = new Image();
-        this.image.src = this.imageSrc;
+        this.image.src = this.IMAGE_SRC;
 
         this.x = x; // Initial x position at the center of the canvas
         this.y = 50; // Initial y position
@@ -24,6 +26,7 @@ export default class Airplane implements GameElement {
         this.speed = 1; // Adjust as needed
         this.direction = 1;
         this._parachutists = []
+        this.lastDropTime = 0;
     }
 
     get parachutists(): Parachutist[] {
@@ -45,8 +48,13 @@ export default class Airplane implements GameElement {
         }
     }
 
-    dropParachutist() {
+    public shouldDropParachutist(currentTime: number) {
+        return currentTime - this.lastDropTime > this.DROP_INTERVAL;
+    }
+
+    dropParachutist(currentTime: number) {
         this._parachutists.push(new Parachutist(this.x + this.width / 2, this.y + this.height));
+        this.lastDropTime = currentTime;
     }
 
     removeParachutist(parachutist: Parachutist) {
