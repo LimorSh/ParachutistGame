@@ -1,7 +1,8 @@
-import FallingObject from "./FallingObject";
+import FallingElement from "./FallingElement";
+import GameElement from "./GameElement";
 
-// Implements a falling object
-export default class Parachutist implements FallingObject{
+// Implements a falling element
+export default class Parachutist implements GameElement, FallingElement {
     private readonly imageSrc = './resources/images/parachutist.png';
     private readonly image: HTMLImageElement;
     readonly x: number;

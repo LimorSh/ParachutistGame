@@ -1,3 +1,4 @@
+import Drawer from './objects/Drawer';
 import GameLogic from './objects/GameLogic';
 
 
@@ -8,19 +9,22 @@ if (!canvas || !ctx) {
     throw new Error("Canvas not supported");
 }
 
+const BACKGROUND_IMAGE_SRC = './resources/images/background.png';
+const SEA_IMAGE_SRC = './resources/images/sea.png';
+
 const backgroundImage = new Image();
-backgroundImage.src = './resources/images/background.png';
+backgroundImage.src = BACKGROUND_IMAGE_SRC;
 const seaImage = new Image();
-seaImage.src = './resources/images/sea.png';
+seaImage.src = SEA_IMAGE_SRC;
+
 const seaImageHeight = canvas.height * 0.2;
-const seaImageWidth = canvas.width;
-const seaImageX = 0;
 const seaImageY = canvas.height - seaImageHeight;
 const boatY = seaImageY + (0.5 * seaImageHeight)
 
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 const canvasMiddleWidth = canvas.width / 2;
+let drawer: Drawer = new Drawer();
 let gameLogic: GameLogic = new GameLogic(canvasMiddleWidth, boatY);
 
 function updateGame() {
@@ -30,14 +34,9 @@ function updateGame() {
         return;
     }
 
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
-    ctx.drawImage(seaImage, seaImageX, seaImageY, seaImageWidth, seaImageHeight);
-
-    gameLogic.drawBoat(ctx)
-    gameLogic.drawAirplane(ctx);
-    gameLogic.drawParachutists(ctx);
+    clearCanvas();
+    drawImages();
+    drawElements();
 
     gameLogic.updateGameElements(canvasWidth, canvasHeight);
 
@@ -59,6 +58,27 @@ function updateGame() {
         gameLogic.resetGame(canvasMiddleWidth, boatY);
 
         return; // Restart the game loop
+    }
+}
+
+function clearCanvas(): void {
+    if (ctx) {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    }
+}
+
+function drawImages(): void {
+    if (ctx) {
+        drawer.drawImage(ctx, backgroundImage, 0, 0, canvasWidth, canvasHeight);
+        drawer.drawImage(ctx, seaImage, 0, seaImageY, canvasWidth, seaImageHeight);
+    }
+}
+
+function drawElements(): void {
+    if (ctx) {
+        drawer.drawElement(ctx, gameLogic.boat);
+        drawer.drawElement(ctx, gameLogic.airplane);
+        drawer.drawElements(ctx, gameLogic.airplane.parachutists);
     }
 }
 

@@ -10,9 +10,8 @@ export default class GameLogic {
     // private imageManager: ImageManager;
     private readonly dropInterval = 5000; // Set the interval between parachutist dropping in milliseconds
     private lastDropTime = 0;
-    private _airplane: Airplane;
+    private readonly _airplane: Airplane;
     private _boat!: Boat;
-    // private parachutists!: Parachutist[];
     private _score!: number;
     private _lives!: number;
 
@@ -27,6 +26,10 @@ export default class GameLogic {
 
     get boat(): Boat {
         return this._boat;
+    }
+
+    get airplane(): Airplane {
+        return this._airplane;
     }
 
     get score(): number {
@@ -49,8 +52,22 @@ export default class GameLogic {
 
     updateGameElements(canvasRightEdge: number, canvasBottom: number) {
         this.updateAirplane(canvasRightEdge);
+        this.updateParachutists(canvasBottom);
+    }
 
-        // Update parachutists
+    updateAirplane(canvasRightEdge: number): void {
+        this._airplane.move(canvasRightEdge);
+
+        const currentTime = Date.now();
+
+        // Call the method to drop parachutists from time to time
+        if (currentTime - this.lastDropTime > this.dropInterval) {
+            this._airplane.dropParachutist();
+            this.lastDropTime = currentTime;
+        }
+    }
+
+    updateParachutists(canvasBottom: number): void {
         for (let parachutist of this._airplane.parachutists) {
             if (parachutist) {
                 parachutist.fall();
@@ -67,17 +84,6 @@ export default class GameLogic {
                     this._airplane.removeParachutist(parachutist)
                 }
             }
-        }
-    }
-
-    updateAirplane(canvasRightEdge: number): void {
-        this._airplane.move(canvasRightEdge);
-        const currentTime = Date.now();
-
-        // Call the method to drop parachutists from time to time
-        if (currentTime - this.lastDropTime > this.dropInterval) {
-            this._airplane.dropParachutist();
-            this.lastDropTime = currentTime;
         }
     }
 
@@ -101,24 +107,6 @@ export default class GameLogic {
         this._score += this.CATCH_POINTS;
     }
 
-    drawBoat(ctx: CanvasRenderingContext2D) {
-        // const boatImage = this.imageManager.getImage(this.imageKey);
-        this._boat.draw(ctx)
-    }
-
-    drawAirplane(ctx: CanvasRenderingContext2D) {
-        // const boatImage = this.imageManager.getImage(this.imageKey);
-        this._airplane.draw(ctx)
-    }
-
-    drawParachutists(ctx: CanvasRenderingContext2D) {
-        for (let parachutist of this._airplane.parachutists) {
-            if (parachutist) {
-                parachutist.draw(ctx)
-            }
-        }
-    }
-
     moveBoatLeft(): void {
         this.boat.moveLeft();
     }
@@ -127,7 +115,7 @@ export default class GameLogic {
         this.boat.moveRight(canvasRightEdge);
     }
 
-    moveBoatByX(x: number) {
+    moveBoatByX(x: number): void {
         this.boat.moveByX(x);
     }
 }

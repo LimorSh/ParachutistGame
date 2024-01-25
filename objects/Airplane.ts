@@ -1,7 +1,8 @@
 import Parachutist from './Parachutist';
+import GameElement from "./GameElement";
 
 // Represents the flying object that is dropping the falling objects
-export default class Airplane {
+export default class Airplane implements GameElement {
     private readonly imageSrc = './resources/images/plane.png';
     private readonly image: HTMLImageElement;
     x: number;
