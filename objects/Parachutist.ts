@@ -1,33 +1,33 @@
 import FallingElement from "./FallingElement";
 import GameElement from "./GameElement";
 
-// Implements a falling element
+// Represents the falling element and implements FallingElement interface
 export default class Parachutist implements GameElement, FallingElement {
-    private readonly imageSrc = './resources/images/parachutist.png';
+    private readonly DEFAULT_IMAGE_SRC = './resources/images/parachutist.png';
     private readonly image: HTMLImageElement;
     readonly x: number;
-    public y: number;
+    public y: number;   // TODO: find a way to make this field not public
     readonly width: number;
     readonly height: number;
     readonly speed: number;
 
-    // constructor(canvas: HTMLCanvasElement, x: number, y: number) {
-    constructor(x: number, y: number) {
+    // TODO: consider managing the sizes here in some way,
+    //  so that they will be derivatives from the canvas sizes from outside.
+    constructor(x: number, y: number, imageSrc?: string) {
         this.image = new Image();
-        this.image.src = this.imageSrc;
-
-        this.x = x; // Initial x position
-        this.y = y; // Start from the top
+        this.image.src = imageSrc || this.DEFAULT_IMAGE_SRC;
+        this.x = x;
+        this.y = y;
         this.width = 50;
         this.height = 60;
-        this.speed = 1; // Falling speed
+        this.speed = 1;
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    public draw(ctx: CanvasRenderingContext2D): void {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    fall() {
+    public fall(): void {
         this.y += this.speed;
     }
 }

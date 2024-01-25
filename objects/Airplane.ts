@@ -1,63 +1,75 @@
 import Parachutist from './Parachutist';
 import GameElement from "./GameElement";
 
-// Represents the flying object that is dropping the falling objects
+// Represents the flying element that is dropping the falling elements
 export default class Airplane implements GameElement {
     private readonly DROP_INTERVAL = 5000;
-    private readonly IMAGE_SRC = './resources/images/plane.png';
+    private readonly DEFAULT_IMAGE_SRC = './resources/images/plane.png';
     private readonly image: HTMLImageElement;
+    private direction: number;  // 1 is right, -1 is left
+    private lastDropTime: number;
+    private _parachutists: Parachutist[];
     x: number;
     y: number;
     width: number;
     height: number;
     speed: number;
-    direction: number;
-    private _parachutists: Parachutist[];
-    private lastDropTime: number;
 
-    constructor(x: number) {
+    // TODO: consider managing the sizes here in some way,
+    //  so that they will be derivatives from the canvas sizes from outside.
+    constructor(x: number, imageSrc?: string) {
         this.image = new Image();
-        this.image.src = this.IMAGE_SRC;
-
-        this.x = x; // Initial x position at the center of the canvas
-        this.y = 50; // Initial y position
-        this.width = 100; // Adjust as needed
-        this.height = 70; // Adjust as needed
-        this.speed = 1; // Adjust as needed
+        this.image.src = imageSrc || this.DEFAULT_IMAGE_SRC;
         this.direction = 1;
-        this._parachutists = []
         this.lastDropTime = 0;
+        this._parachutists = []
+        this.x = x;
+        this.y = 50;
+        this.width = 100;
+        this.height = 70;
+        this.speed = 1;
     }
 
     get parachutists(): Parachutist[] {
         return this._parachutists;
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    public draw(ctx: CanvasRenderingContext2D): void {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    move(canvasRightEdge: number) {
-        // Move the airplane from side to side
+    public move(leftEdge: number, rightEdge: number): void {
         this.x += this.speed * this.direction;
 
-        // Reverse direction when reaching canvas boundaries
-        if (this.x < 0 || this.x + this.width > canvasRightEdge) {
-            // this.speed *= -1;
+        if (this.isReachedEdge(leftEdge, rightEdge)) {
             this.direction *= -1;
         }
     }
 
-    public shouldDropParachutist(currentTime: number) {
+    private isReachedEdge(leftEdge: number, rightEdge: number): boolean {
+        return this.x < leftEdge || this.x + this.width > rightEdge;
+    }
+
+    public shouldDropParachutist(currentTime: number): boolean {
         return currentTime - this.lastDropTime > this.DROP_INTERVAL;
     }
 
-    dropParachutist(currentTime: number) {
-        this._parachutists.push(new Parachutist(this.x + this.width / 2, this.y + this.height));
+    public dropParachutist(currentTime: number): void {
+        let parachutist = new Parachutist(this.getMiddlePosition(), this.getBottom());
+        this._parachutists.push(parachutist);
         this.lastDropTime = currentTime;
     }
 
-    removeParachutist(parachutist: Parachutist) {
+    private getMiddlePosition(): number {
+        return this.x + this.width / 2;
+    }
+
+    private getBottom(): number {
+        return this.y + this.height;
+    }
+
+    // TODO: replace filter with slice for more efficiency.
+    public removeParachutist(parachutist: Parachutist): void {
         this._parachutists = this._parachutists.filter(p => p !== parachutist);
     }
 }

@@ -1,24 +1,31 @@
 import Boat from "./Boat";
 import Parachutist from "./Parachutist";
 import Airplane from "./Airplane";
-import ImageManager from "./ImageManager";
 
 // Manages the game state and logic
 export default class GameLogic {
     private readonly CATCH_POINTS = 10;
     private readonly TOTAL_LIVES = 3;
-    // private imageManager: ImageManager;
+    private readonly canvasLeftEdge: number;
+    private readonly canvasRightEdge: number;
+    private readonly canvasMiddleWidth: number;
+    private readonly canvasBottom: number;
+    private readonly boatBottom: number;
     private readonly _airplane: Airplane;
     private _boat!: Boat;
     private _score!: number;
     private _lives!: number;
 
 
-    constructor(canvasMiddleWidth: number, boatY: number) {
-        // this.imageManager = imageManager;
+    constructor(canvasWidth: number, canvasHeight: number, boatBottom: number) {
+        this.canvasLeftEdge = 0;
+        this.canvasRightEdge = canvasWidth;
+        this.canvasMiddleWidth = canvasWidth / 2;
+        this.canvasBottom = canvasHeight;
+        this.boatBottom = boatBottom;
 
-        this.initGame(canvasMiddleWidth, boatY);
-        this._airplane = new Airplane(canvasMiddleWidth);
+        this.initGame();
+        this._airplane = new Airplane(this.canvasMiddleWidth);
     }
 
     get boat(): Boat {
@@ -37,23 +44,23 @@ export default class GameLogic {
         return this._lives;
     }
 
-    resetGame(boatX: number, boatY: number): void {
-        this.initGame(boatX, boatY);
+    public resetGame(): void {
+        this.initGame();
     }
 
-    private initGame(boatX: number, boatY: number): void {
+    private initGame(): void {
         this._score = 0;
         this._lives = this.TOTAL_LIVES;
-        this._boat = new Boat(boatX, boatY);
+        this._boat = new Boat(this.canvasMiddleWidth, this.boatBottom);
     }
 
-    updateGameElements(canvasRightEdge: number, canvasBottom: number) {
-        this.updateAirplane(canvasRightEdge);
-        this.updateParachutists(canvasBottom);
+    public updateGameElements() {
+        this.updateAirplane();
+        this.updateParachutists();
     }
 
-    updateAirplane(canvasRightEdge: number): void {
-        this._airplane.move(canvasRightEdge);
+    private updateAirplane(): void {
+        this._airplane.move(this.canvasLeftEdge, this.canvasRightEdge);
 
         const currentTime = Date.now();
 
@@ -62,18 +69,16 @@ export default class GameLogic {
         }
     }
 
-    updateParachutists(canvasBottom: number): void {
+    private updateParachutists(): void {
         for (let parachutist of this._airplane.parachutists) {
             if (parachutist) {
                 parachutist.fall();
 
-                // Check if parachutist reaches the water
-                if (this.isParachutistReachedWater(parachutist, canvasBottom)) {
+                if (this.isParachutistReachedWater(parachutist)) {
                     this.decreaseLives();
                     this._airplane.removeParachutist(parachutist)
                 }
 
-                // Check if boat catches the parachutist
                 if (this.isBoatCatchParachutist(parachutist)) {
                     this.increaseScore();
                     this._airplane.removeParachutist(parachutist)
@@ -82,35 +87,37 @@ export default class GameLogic {
         }
     }
 
-    isParachutistReachedWater(parachutist: Parachutist, canvasBottom: number): boolean {
-        return parachutist.y > canvasBottom;
+    private isParachutistReachedWater(parachutist: Parachutist): boolean {
+        return parachutist.y > this.canvasBottom;
     }
 
-    isBoatCatchParachutist(parachutist: Parachutist): boolean {
+    private isBoatCatchParachutist(parachutist: Parachutist): boolean {
         return this.boat.isCatch(parachutist)
     }
 
-    isGameOver(): boolean {
+    public isGameOver(): boolean {
         return this.lives <= 0
     }
 
-    decreaseLives(): void {
+    private decreaseLives(): void {
         this._lives--;
     }
 
-    increaseScore(): void {
+    private increaseScore(): void {
         this._score += this.CATCH_POINTS;
     }
 
-    moveBoatLeft(): void {
-        this.boat.moveLeft();
+    public moveBoat(position: number): void {
+        this.boat.move(position);
     }
 
-    moveBoatRight(canvasRightEdge: number): void {
-        this.boat.moveRight(canvasRightEdge);
+    public moveBoatLeft(): void {
+        this.boat.moveLeft(this.canvasLeftEdge);
     }
 
-    moveBoatByX(x: number): void {
-        this.boat.moveByX(x);
+    public moveBoatRight(): void {
+        this.boat.moveRight(this.canvasRightEdge);
     }
 }
+
+

@@ -1,3 +1,4 @@
+// Game element interface that all game elements should implement.
 export default interface GameElement {
     x: number;
     y: number;

@@ -1,7 +1,8 @@
 import GameElement from "./GameElement";
 
+// Draws game elements and images
 export default class Drawer {
-    drawElements(ctx: CanvasRenderingContext2D, elements: GameElement[]): void {
+    public drawElements(ctx: CanvasRenderingContext2D, elements: GameElement[]): void {
         for (let element of elements) {
             if (element) {
                 this.drawElement(ctx, element);
@@ -9,14 +10,14 @@ export default class Drawer {
         }
     }
 
-    drawElement(ctx: CanvasRenderingContext2D, element: GameElement): void {
+    public drawElement(ctx: CanvasRenderingContext2D, element: GameElement): void {
         if (element) {
             element.draw(ctx)
         }
     }
 
-    drawImage(ctx: CanvasRenderingContext2D, image: HTMLImageElement,
-              x: number, y: number, width: number, height: number): void {
+    public drawImage(ctx: CanvasRenderingContext2D, image: HTMLImageElement,
+                     x: number, y: number, width: number, height: number): void {
         ctx.drawImage(image, x, y, width, height);
     }
 }
