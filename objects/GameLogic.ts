@@ -11,7 +11,7 @@ export default class GameLogic {
     private readonly canvasMiddleWidth: number;
     private readonly canvasBottom: number;
     private readonly boatBottom: number;
-    private readonly _airplane: Airplane;
+    private _airplane!: Airplane;
     private _boat!: Boat;
     private _score!: number;
     private _lives!: number;
@@ -25,7 +25,6 @@ export default class GameLogic {
         this.boatBottom = boatBottom;
 
         this.initGame();
-        this._airplane = new Airplane(this.canvasMiddleWidth);
     }
 
     get boat(): Boat {
@@ -52,6 +51,7 @@ export default class GameLogic {
         this._score = 0;
         this._lives = this.TOTAL_LIVES;
         this._boat = new Boat(this.canvasMiddleWidth, this.boatBottom);
+        this._airplane = new Airplane(this.canvasMiddleWidth);
     }
 
     public updateGameElements() {

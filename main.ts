@@ -36,7 +36,7 @@ function updateGame() {
     displayLives();
 
     if (gameLogic.isGameOver()) {
-        alert("Game Over! Your score: " + gameLogic.score);
+        notifyGameOver();
         gameLogic.resetGame();
 
         return;
@@ -78,6 +78,9 @@ function displayLives(): void {
         ctx.font = '20px Arial';
         ctx.fillText('Lives: ' + gameLogic.lives, CANVAS_WIDTH - 100, 30);
     }
+}
+function notifyGameOver(): void {
+    alert("Game Over! Your score: " + gameLogic.score);
 }
 
 // Keyboard controls
