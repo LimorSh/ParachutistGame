@@ -99,6 +99,10 @@ export default class GameLogic {
         return this.lives <= 0
     }
 
+    public getGameOverMsg(): string {
+        return "Game Over! Your score: " + this.score;
+    }
+
     private decreaseLives(): void {
         this._lives--;
     }

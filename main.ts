@@ -80,7 +80,7 @@ function displayLives(): void {
     }
 }
 function notifyGameOver(): void {
-    alert("Game Over! Your score: " + gameLogic.score);
+    alert(gameLogic.getGameOverMsg());
 }
 
 // Keyboard controls
