@@ -2,7 +2,7 @@ import Boat from "./Boat";
 import Parachutist from "./Parachutist";
 import Airplane from "./Airplane";
 
-// Manages the game state and logic
+// Manages the game state and logic.
 export default class GameLogic {
     private readonly CATCH_POINTS = 10;
     private readonly TOTAL_LIVES = 3;

@@ -1,6 +1,6 @@
 import GameElement from "./GameElement";
 
-// Draws game elements and images
+// Draws game elements and images.
 export default class Drawer {
     public drawElements(ctx: CanvasRenderingContext2D, elements: GameElement[]): void {
         for (let element of elements) {

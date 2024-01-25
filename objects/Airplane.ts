@@ -1,7 +1,7 @@
 import Parachutist from './Parachutist';
 import GameElement from "./GameElement";
 
-// Represents the flying element that is dropping the falling elements
+// Represents the flying element that is dropping the falling elements.
 export default class Airplane implements GameElement {
     private readonly DROP_INTERVAL = 5000;
     private readonly DEFAULT_IMAGE_SRC = './resources/images/plane.png';

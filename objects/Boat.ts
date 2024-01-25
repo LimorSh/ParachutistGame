@@ -1,7 +1,7 @@
 import Parachutist from './Parachutist';
 import GameElement from "./GameElement";
 
-// Represents the player-controlled boat that is trying to catch the falling elements
+// Represents the player-controlled boat that is trying to catch the falling elements.
 export default class Boat implements GameElement {
     private readonly DEFAULT_IMAGE_SRC = './resources/images/boat.png';
     private readonly image: HTMLImageElement;

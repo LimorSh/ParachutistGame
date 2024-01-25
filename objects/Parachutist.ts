@@ -1,7 +1,7 @@
 import FallingElement from "./FallingElement";
 import GameElement from "./GameElement";
 
-// Represents the falling element and implements FallingElement interface
+// Represents the falling element.
 export default class Parachutist implements GameElement, FallingElement {
     private readonly DEFAULT_IMAGE_SRC = './resources/images/parachutist.png';
     private readonly image: HTMLImageElement;
