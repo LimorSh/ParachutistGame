@@ -12,7 +12,7 @@ export default class GameLogic {
     private lastDropTime = 0;
     private _airplane: Airplane;
     private _boat!: Boat;
-    private parachutists!: Parachutist[];
+    // private parachutists!: Parachutist[];
     private _score!: number;
     private _lives!: number;
 
@@ -37,7 +37,7 @@ export default class GameLogic {
         return this._lives;
     }
 
-    resetGame(boatX : number, boatY: number): void {
+    resetGame(boatX: number, boatY: number): void {
         this.initGame(boatX, boatY);
     }
 
@@ -45,27 +45,26 @@ export default class GameLogic {
         this._score = 0;
         this._lives = this.TOTAL_LIVES;
         this._boat = new Boat(boatX, boatY);
-        this.parachutists = [];
     }
 
     updateGameElements(canvasRightEdge: number, canvasBottom: number) {
         this.updateAirplane(canvasRightEdge);
 
         // Update parachutists
-        for (let parachutist of this.parachutists) {
+        for (let parachutist of this._airplane.parachutists) {
             if (parachutist) {
                 parachutist.fall();
 
                 // Check if parachutist reaches the water
                 if (this.isParachutistReachedWater(parachutist, canvasBottom)) {
                     this.decreaseLives();
-                    this.parachutists = this.parachutists.filter(p => p !== parachutist); // Remove fallen parachutist
+                    this._airplane.removeParachutist(parachutist)
                 }
 
                 // Check if boat catches the parachutist
-                if (this.boat.isCatch(parachutist)) {
+                if (this.isBoatCatchParachutist(parachutist)) {
                     this.increaseScore();
-                    this.parachutists = this.parachutists.filter(p => p !== parachutist); // Remove caught parachutist
+                    this._airplane.removeParachutist(parachutist)
                 }
             }
         }
@@ -77,13 +76,17 @@ export default class GameLogic {
 
         // Call the method to drop parachutists from time to time
         if (currentTime - this.lastDropTime > this.dropInterval) {
-            this._airplane.dropParachutist(this.parachutists);
+            this._airplane.dropParachutist();
             this.lastDropTime = currentTime;
         }
     }
 
     isParachutistReachedWater(parachutist: Parachutist, canvasBottom: number): boolean {
         return parachutist.y > canvasBottom;
+    }
+
+    isBoatCatchParachutist(parachutist: Parachutist): boolean {
+        return this.boat.isCatch(parachutist)
     }
 
     isGameOver(): boolean {
@@ -109,7 +112,7 @@ export default class GameLogic {
     }
 
     drawParachutists(ctx: CanvasRenderingContext2D) {
-        for (let parachutist of this.parachutists) {
+        for (let parachutist of this._airplane.parachutists) {
             if (parachutist) {
                 parachutist.draw(ctx)
             }

@@ -10,7 +10,7 @@ export default class Airplane {
     height: number;
     speed: number;
     direction: number;
-    // private parachutists: Parachutist[];
+    private _parachutists: Parachutist[];
 
     constructor(x: number) {
         this.image = new Image();
@@ -22,7 +22,11 @@ export default class Airplane {
         this.height = 70; // Adjust as needed
         this.speed = 1; // Adjust as needed
         this.direction = 1;
-        // this.parachutists = []
+        this._parachutists = []
+    }
+
+    get parachutists(): Parachutist[] {
+        return this._parachutists;
     }
 
     draw(ctx: CanvasRenderingContext2D) {
@@ -40,15 +44,11 @@ export default class Airplane {
         }
     }
 
-    dropParachutist(parachutists: Parachutist[]) {
-        parachutists.push(new Parachutist(this.x + this.width / 2, this.y + this.height));
+    dropParachutist() {
+        this._parachutists.push(new Parachutist(this.x + this.width / 2, this.y + this.height));
     }
 
-    // dropParachutist() {
-    //     this.parachutists.push(new Parachutist(this.x + this.width / 2, this.y + this.height));
-    // }
-
-    // removeParachutist(parachutist: Parachutist) {
-    //     this.parachutists.filter(p => p !== parachutist);
-    // }
+    removeParachutist(parachutist: Parachutist) {
+        this._parachutists = this._parachutists.filter(p => p !== parachutist);
+    }
 }
