@@ -26,33 +26,17 @@ let drawer: Drawer = new Drawer();
 let gameLogic: GameLogic = new GameLogic(CANVAS_WIDTH, CANVAS_HEIGHT, boatBottom);
 
 function updateGame() {
-    // Check if canvas is null, and if so, return to avoid further execution
-    if (!canvas || !ctx) {
-        console.error("Canvas or context is null.");
-        return;
-    }
-
     clearCanvas();
     drawImages();
     drawElements();
 
     gameLogic.updateGameElements();
 
-    // Display score and lives
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
-    ctx.fillText('  Score: ' + gameLogic.score, 10, 30);
-    ctx.fillText('Lives: ' + gameLogic.lives, CANVAS_WIDTH - 100, 30);
+    displayScore();
+    displayLives();
 
-    // Check game over condition
     if (gameLogic.isGameOver()) {
-        //todo: draw live: 0
-        // ctx.fillStyle = 'black';
-        // ctx.font = '20px Arial';
-        // ctx.fillText('Lives: ' + lives, canvas.width - 100, 30);
-
         alert("Game Over! Your score: " + gameLogic.score);
-
         gameLogic.resetGame();
 
         return;
@@ -77,6 +61,22 @@ function drawElements(): void {
         drawer.drawElement(ctx, gameLogic.boat);
         drawer.drawElement(ctx, gameLogic.airplane);
         drawer.drawElements(ctx, gameLogic.airplane.parachutists);
+    }
+}
+
+function displayScore(): void {
+    if (ctx) {
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        ctx.fillText('  Score: ' + gameLogic.score, 10, 30);
+    }
+}
+
+function displayLives(): void {
+    if (ctx) {
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        ctx.fillText('Lives: ' + gameLogic.lives, CANVAS_WIDTH - 100, 30);
     }
 }
 

@@ -25,8 +25,8 @@ export default class Airplane implements GameElement {
         this._parachutists = []
         this.x = x;
         this.y = 50;
-        this.width = 100;
-        this.height = 70;
+        this.width = 120;
+        this.height = 90;
         this.speed = 1;
     }
 

@@ -16,8 +16,8 @@ export default class Boat implements GameElement {
     constructor(position: number, bottom: number, imageSrc?: string) {
         this.image = new Image();
         this.image.src = imageSrc || this.DEFAULT_IMAGE_SRC;
-        this.width = 80;
-        this.height = 60;
+        this.width = 90;
+        this.height = 70;
         this.x = position - this.getMiddleBoatWidth();
         this.y = bottom - this.height;
         this.speed = 10;

@@ -18,8 +18,8 @@ export default class Parachutist implements GameElement, FallingElement {
         this.image.src = imageSrc || this.DEFAULT_IMAGE_SRC;
         this.x = x;
         this.y = y;
-        this.width = 50;
-        this.height = 60;
+        this.width = 70;
+        this.height = 80;
         this.speed = 1;
     }
 
